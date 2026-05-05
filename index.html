@@ -882,7 +882,7 @@ function toast(msg){
 
 // ══ GOOGLE SHEETS CONFIG ══════════════════════════════════════════════════════
 // 👉 REMPLACEZ cette URL par votre URL Apps Script déployée
-const APPS_SCRIPT_URL = "https://script.google.com/a/macros/tchad.alima.ngo/s/AKfycbxxYAzGvPER-WPSlC8kOK2RUzicYTc65-O6Hi5F3HxH74SdaxhkXps9_PpMSvoTjJ_x/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgFWVlH1LEiGOujRQHeOUWibeWpGmOkOelOch8o5NiDm0Wxqqnvu-w2FopobQXv77Q_g/exec";
 
 // Intervalle de rafraîchissement automatique (en millisecondes). 60000 = 1 min
 const REFRESH_INTERVAL = 60000;
@@ -951,7 +951,7 @@ async function loadFromSheets() {
 
 // ══ ENVOI ALERTE VERS GOOGLE SHEETS (remplace saveAlert) ══════════════════════
 async function saveAlertToSheets(alertData) {
-  if (APPS_SCRIPT_URL.includes("https://script.google.com/a/macros/tchad.alima.ngo/s/AKfycbxxYAzGvPER-WPSlC8kOK2RUzicYTc65-O6Hi5F3HxH74SdaxhkXps9_PpMSvoTjJ_x/exec")) {
+  if (APPS_SCRIPT_URL.includes("VOTRE_ID_ICI")) {
     DATA.unshift(alertData);
     closeModal(); apf();
     toast("✓ Alerte enregistrée (local) — " + alertData.z + " · " + alertData.d);
