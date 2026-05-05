@@ -909,8 +909,8 @@ function setStatus(type, msg) {
 
 // ══ CHARGEMENT DONNÉES DEPUIS GOOGLE SHEETS ═══════════════════════════════════
 async function loadFromSheets() {
-  // Si l'URL n'est pas configurée, on reste sur les données locales
-  if (APPS_SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbx-zckAc33pBXDrzXV1Zn2oq66grNdORQ10LAA0xqm4EIYfAnBqDhaovNnemhWqxwL98g/exec")) {
+  // Si l'URL n'est pas configurée
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "VOTRE_URL_ICI") {
     setStatus("local", "⚠ Mode local (non connecté)");
     initEvol(); apf();
     return;
@@ -951,7 +951,7 @@ async function loadFromSheets() {
 
 // ══ ENVOI ALERTE VERS GOOGLE SHEETS (remplace saveAlert) ══════════════════════
 async function saveAlertToSheets(alertData) {
-  if (APPS_SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbx-zckAc33pBXDrzXV1Zn2oq66grNdORQ10LAA0xqm4EIYfAnBqDhaovNnemhWqxwL98g/exec")) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "VOTRE_URL_ICI") {
     DATA.unshift(alertData);
     closeModal(); apf();
     toast("✓ Alerte enregistrée (local) — " + alertData.z + " · " + alertData.d);
