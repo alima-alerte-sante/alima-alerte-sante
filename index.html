@@ -951,7 +951,7 @@ async function loadFromSheets() {
 
 // ══ ENVOI ALERTE VERS GOOGLE SHEETS (remplace saveAlert) ══════════════════════
 async function saveAlertToSheets(alertData) {
-  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "VOTRE_URL_ICI") {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "https://script.google.com/macros/s/AKfycbx-zckAc33pBXDrzXV1Zn2oq66grNdORQ10LAA0xqm4EIYfAnBqDhaovNnemhWqxwL98g/exec") {
     DATA.unshift(alertData);
     closeModal(); apf();
     toast("✓ Alerte enregistrée (local) — " + alertData.z + " · " + alertData.d);
