@@ -950,46 +950,73 @@ async function loadFromSheets() {
 }
 
 // ══ ENVOI ALERTE VERS GOOGLE SHEETS (remplace saveAlert) ══════════════════════
-async function saveAlertToSheets(alertData) {
-  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "https://script.google.com/macros/s/AKfycbxd6MpmiNeOlvB3x09w3xMTvbVpUFr7qnJF4DrmEQ1fSc4ZhFFqAGJY58LOPmmkvHdc6Q/exec") {
-    DATA.unshift(alertData);
-    closeModal(); apf();
-    toast("✓ Alerte enregistrée (local) — " + alertData.z + " · " + alertData.d);
+async function fetchAlerts() {
+  try {
+    const res = await fetch(API_URL + "?action=getData");
+    const json = await res.json();
+
+    if (!json.success) return;
+
+    alerts = json.data.map(row => ({
+      zone: row[0],
+      region: row[1],
+      disease: row[2],
+      cas: parseInt(row[3]) || 0,
+      deces: parseInt(row[4]) || 0,
+      trend: row[5] || "=0%",
+      sev: row[6] || "faible",
+      date: row[7],
+      notes: row[8]
+    }));
+
+    applyFilters(); // recharge dashboard
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+async function saveAlert() {
+
+  const zone = document.getElementById('f-zone').value;
+  const region = document.getElementById('f-region').value;
+  const disease = document.getElementById('f-disease').value;
+  const sev = document.getElementById('f-sev').value;
+  const cas = document.getElementById('f-cas').value;
+  const deces = document.getElementById('f-deces').value;
+  const notes = document.getElementById('f-notes').value;
+
+  if (!cas) {
+    showToast("Saisir nombre de cas");
     return;
   }
 
-  toast("⟳ Envoi en cours...");
-  try {
-    const params = new URLSearchParams({
-      action: "addAlert",
-      z:  alertData.z,
-      r:  alertData.r,
-      d:  alertData.d,
-      c:  alertData.c,
-      dc: alertData.dc,
-      t:  alertData.t,
-      s:  alertData.s,
-      dt: alertData.dt,
-      n:  alertData.n || ""
-    });
+  const url = `${API_URL}?action=addAlert`
+    + `&z=${encodeURIComponent(zone)}`
+    + `&r=${encodeURIComponent(region)}`
+    + `&d=${encodeURIComponent(disease)}`
+    + `&c=${cas}`
+    + `&dc=${deces}`
+    + `&s=${sev}`
+    + `&n=${encodeURIComponent(notes)}`;
 
-    const res = await fetch(APPS_SCRIPT_URL + "?" + params.toString());
+  try {
+    const res = await fetch(url);
     const json = await res.json();
 
     if (json.success) {
-      DATA.unshift(alertData);
-      closeModal(); apf();
-      toast("✓ Alerte envoyée — " + alertData.z + " · " + alertData.d);
-      setTimeout(loadFromSheets, 2000);
+      showToast("Alerte envoyée !");
+      closeModal();
+      fetchAlerts(); // refresh direct
     } else {
-      throw new Error(json.error || "Erreur inconnue");
+      showToast("Erreur API");
     }
-  } catch(e) {
-    DATA.unshift(alertData);
-    closeModal(); apf();
-    toast("⚠ Enregistré localement — " + e.message);
+
+  } catch (err) {
+    showToast("Erreur connexion");
   }
 }
+fetchAlerts(); // chargement initial
+setInterval(fetchAlerts, 10000); // toutes les 10 sec
 // Surcharge de saveAlert pour intercepter et envoyer vers Sheets
 const _origSaveAlert = saveAlert;
 saveAlert = function() {
