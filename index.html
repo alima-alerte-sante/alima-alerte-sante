@@ -913,18 +913,18 @@ function jsonpFetch(url) {
     const script = document.createElement("script");
     const timeout = setTimeout(() => {
       delete window[cbName];
-      if (document.body.contains(script)) document.body.removeChild(script);
+      try { document.head.removeChild(script); } catch(e) {}
       reject(new Error("Timeout"));
     }, 10000);
     window[cbName] = function(data) {
       clearTimeout(timeout);
       delete window[cbName];
-      if (document.body.contains(script)) document.body.removeChild(script);
+      try { document.head.removeChild(script); } catch(e) {}
       resolve(data);
     };
-    script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + cbName;
-    script.onerror = () => { clearTimeout(timeout); reject(new Error("Script error")); };
-    document.body.appendChild(script);
+    script.src = url + (url.includes("?") ? "&" : "?") + "callback=" + cbName + "&t=" + Date.now();
+    script.onerror = function() { clearTimeout(timeout); delete window[cbName]; try { document.head.removeChild(script); } catch(e) {} reject(new Error("Script error")); };
+    document.head.appendChild(script);
   });
 }
 
