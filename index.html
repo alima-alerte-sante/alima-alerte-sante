@@ -845,7 +845,7 @@ function updZones(){
   const r=document.getElementById("mReg").value;
   document.getElementById("mZone").innerHTML=ZONES[r].map(z=>`<option>${z}</option>`).join("");
 }
-function openModal(){updZones();document.getElementById("mDate").value=new Date().toISOString().slice(0,10);document.getElementById("ov").classList.add("op");}
+function openModal(){ window.open(FORM_URL, '_blank'); }
 function closeModal(){document.getElementById("ov").classList.remove("op");}
 function saveAlert(){
   const z=document.getElementById("mZone").value,r=document.getElementById("mReg").value;
@@ -881,7 +881,8 @@ function toast(msg){
 }
 
 // ══ GOOGLE SHEETS CONFIG ══════════════════════════════════════════════════════
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUH0CsnNvQT50m97sNmL_AV-9IS2azlAeBi6fXYstjyL2meOkcnaP53_Za5Xy8m9wwbw/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym4wwe81tk2onr1oRxXPkjxT6MdQuxhJ0gVxn-InONIbnW1ZmIavLLfYCqF_fgQe5_8g/exec";
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfBGq_3soinsXkmPR6qz30a8Y-PLEYI7TIOO-uTL8gd2cd2zA/viewform";
 
 // Intervalle de rafraîchissement automatique (en millisecondes). 60000 = 1 min
 const REFRESH_INTERVAL = 60000;
